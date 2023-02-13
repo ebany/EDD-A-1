@@ -5,6 +5,7 @@ go 1.20
 require (
 	greetings v0.0.0-00010101000000-000000000000
 	rsc.io/quote v1.5.2
+	struct1 v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -13,3 +14,5 @@ require (
 )
 
 replace greetings => ../greetings
+
+replace struct1 => ../struct1
