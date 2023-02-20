@@ -45,34 +45,73 @@ func (r *Nodo) Size() int {
 	}
 }
 
-func Sort(nodo *Nodo, n int) {
+func Sort(nodo *Nodo, n int) *Nodo {
+	var start *Nodo = nodo
+
 	auxI := nodo
 	var auxOld *Nodo
-	for i := 0; i < n-1; i++ {
+
+	for auxI != nil {
 		auxJ := auxI.next
-		for j := i + 1; j < n; j++ {
+
+		atStart := false
+		for auxJ != nil {
 			if auxJ != nil && auxI.value > auxJ.value {
 				intercambiar(auxI, auxJ, auxOld)
+				if auxOld == nil {
+					auxI = auxJ
+					atStart = true
+				} else {
+					auxI = auxOld
+				}
+				break
 			}
-			if auxJ != nil {
-				auxJ = auxJ.next
-			}
+			auxJ = auxJ.next
 		}
-		auxOld = auxI
-		auxI = auxI.next
+
+		if !atStart {
+			auxOld = auxI
+			auxI = auxI.next
+		} else {
+			start = auxI
+		}
+		atStart = false
+
+		if auxI == nil || auxI.next == nil {
+			break
+		}
 	}
+
+	return start
 }
 
-func intercambiar(valueA *Nodo, valueB *Nodo, old *Nodo) {
-	aux := valueA
-	valueA = valueB
-	valueB = aux
+func intercambiar(valueI *Nodo, valueJ *Nodo, old *Nodo) {
+	aux := valueI
 
-	valueB.next = valueA.next
-	valueA.next = valueB
+	auxNextStart := valueI.next
+	auxNextEnd := valueI.next
+
+	for auxNextEnd.value != valueJ.value && auxNextEnd.next != nil && auxNextEnd.next.value != valueJ.value {
+		auxNextEnd = auxNextEnd.next
+	}
+
+	valueI = valueJ
+	valueJ = aux
+
+	valueJ.next = valueI.next
+
+	if auxNextStart.value != valueI.value {
+		valueI.next = auxNextStart
+	} else {
+		valueI.next = valueJ
+	}
+
+	if auxNextEnd.value != valueI.value {
+		auxNextEnd.next = valueJ
+	}
 
 	if old != nil {
-		old.next = valueA
+		old.next = valueI
 	}
 }
 

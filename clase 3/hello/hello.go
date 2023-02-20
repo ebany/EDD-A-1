@@ -19,13 +19,14 @@ func main() {
 
 	start.PrintAll()
 	fmt.Println(start.Size())
-
-	start = struct1.InsertStart(1, start)
+	start = struct1.InsertStart(3, start)
+	start = struct1.InsertStart(20, start)
+	start.InsertEnd(1)
 	start.PrintAll()
 
 	fmt.Println(start.Size())
 
-	struct1.Sort(start, start.Size())
+	start = struct1.Sort(start, start.Size())
 	start.PrintAll()
 
 	start = struct1.DeleteStart(start)
