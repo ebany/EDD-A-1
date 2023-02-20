@@ -38,4 +38,11 @@ func main() {
 
 	fmt.Println(start.Size())
 
+	start = struct1.DeleteByValue(8, start)
+	start.PrintAll()
+	start = struct1.DeleteByValue(5, start)
+	start.PrintAll()
+	start = struct1.DeleteByValue(10, start)
+	start.PrintAll()
+
 }

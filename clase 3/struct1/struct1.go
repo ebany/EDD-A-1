@@ -128,3 +128,22 @@ func (r *Nodo) DeleteEnd() {
 		}
 	}
 }
+
+func DeleteByValue(value int, start *Nodo) *Nodo {
+	if start.value == value {
+		return start.next
+	} else {
+		start.next.deleteByValue(value, start)
+		return start
+	}
+}
+
+func (r *Nodo) deleteByValue(value int, before *Nodo) {
+	if r.value == value {
+		if before != nil {
+			before.next = r.next
+		}
+	} else {
+		r.next.deleteByValue(value, r)
+	}
+}
