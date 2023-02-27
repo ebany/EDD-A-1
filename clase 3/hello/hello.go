@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/csv"
 	"fmt"
 	"io"
 	"os"
@@ -63,6 +64,8 @@ func main() {
 		fmt.Println("3. eliminar valor")
 		fmt.Println("4. ingresar string")
 		fmt.Println("5. graficar")
+		fmt.Println("7. leer csv")
+		fmt.Println("8. imprimir de otra clase")
 		fmt.Println("6. Salir")
 		fmt.Print("******************Elige una opcion: ")
 
@@ -112,6 +115,16 @@ func main() {
 			openImage()
 		case 6:
 			exit = false
+		case 7:
+			archivo := readCsvFile("prueba.csv")
+			for i := 1; i < len(archivo); i++ {
+				for j := 0; j < len(archivo[i]); j++ {
+					fmt.Println(archivo[i][j])
+				}
+				fmt.Println("---------------")
+			}
+		case 8:
+			fmt.Println(struct1.Demo("hola"))
 		default:
 			fmt.Println("Ingrese una opcíon válida")
 		}
@@ -138,4 +151,20 @@ func openImage() {
 		fmt.Println("error: ", err)
 	}
 	fmt.Println("resultado: ", cmd)
+}
+
+func readCsvFile(filePath string) [][]string {
+	f, err := os.Open(filePath)
+	if err != nil {
+		fmt.Println("Unable to read input file "+filePath, err)
+	}
+	defer f.Close()
+
+	csvReader := csv.NewReader(f)
+	records, err := csvReader.ReadAll()
+	if err != nil {
+		fmt.Println("Unable to parse file as CSV for "+filePath, err)
+	}
+
+	return records
 }
