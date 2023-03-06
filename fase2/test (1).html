@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+
+<body>
+
+    <h2>Use JavaScript to Change Text</h2>
+    <p>This example writes "Hello JavaScript!" into an HTML element with id="demo":</p>
+
+    <p id="demo"></p>
+    <div>
+        <img id="image">
+    </div>
+
+    <script>
+        let url = 'https://quickchart.io/graphviz?graph=';
+        let body = 'digraph G {  a -> b0  xb [label=\"\",width=.1,style=invis]  a -> xb [style=invis]  a -> b1  {rank=same b0 -> xb -> b1 [style=invis]}  b0 -> c0  xc [label=\"\",width=.1,style=invis]  b0 -> xc [style=invis]  b0 -> c1  {rank=same c0 -> xc -> c1 [style=invis]}}'
+        $("#image").attr("src", url + body);
+
+        setTimeout(() => {
+            let otherBody = "digraph{main->parse->execute;main->init;main->cleanup;execute->make_string;execute->printf;init->make_string;main->printf;execute->compare;}"
+            $("#image").attr("src", url + otherBody);
+        }, 2500);
+    </script>
+
+</body>
+
+</html>
