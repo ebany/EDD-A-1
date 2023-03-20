@@ -1,0 +1,22 @@
+{
+    "alumnos": [
+        {
+            "nombre": "dummy1",
+            "carnet": 123123123,
+            "password": "asdfsadf",
+            "Carpeta_Raiz": "/"
+        },
+        {
+            "nombre": "dummy2",
+            "carnet": 3453454,
+            "password": "asdfsadf",
+            "Carpeta_Raiz": "/"
+        },
+        {
+            "nombre": "dummy3",
+            "carnet": 99827348,
+            "password": "asdfsadf",
+            "Carpeta_Raiz": "/"
+        }
+    ]
+}
