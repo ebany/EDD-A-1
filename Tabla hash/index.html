@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Prueba</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+        /*sticky th*/
+        th {
+            position: sticky;
+            top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div>Demo Tabla hash</div>
+
+    <div>
+        <input type="file">
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+                <tr>Carnet</tr>
+                <tr>Nombre</tr>
+                <tr>Password</tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+
+        class Alumno {
+            constructor(carnet, nombre, password) {
+                this.carnet = carnet;
+                this.nombre = nombre;
+                this.password = password;
+            }
+        }
+
+        class HashTable {
+            constructor(size) {
+                this.data = new Array(size);
+                this.loadFactor = 0;
+            }
+
+            hashFunction(key, search = false) {
+                let hash = 0;
+                for (let i = 0; i < key.length; i++) {
+                    hash = hash + key.charCodeAt(i);
+                }
+                hash = hash % this.data.length;
+
+                if (search) {
+                    if (this.data[hash] && this.data[hash].carnet === key) {
+                        return hash;
+                    }
+                }
+
+                if (this.data[hash]) {
+                    hash = this.hashColition(hash, search, key);
+                }
+                return hash;
+            }
+
+            hashColition(hash, search, key) {
+                let newHash = hash;
+                let quadratic = 1;
+                while (this.data[newHash]) {
+                    newHash = newHash + Math.pow(quadratic, 2);
+
+                    if (search) {
+                        if (this.data[newHash] && this.data[newHash].carnet === key) {
+                            return newHash;
+                        }
+                    }
+
+                    quadratic++;
+                }
+                return newHash;
+            }
+
+            rehashing() {
+                let newHashTable = new HashTable(this.getNextPrimeNumber(this.data.length));
+                for (let i = 0; i < this.data.length; i++) {
+                    if (this.data[i]) {
+                        newHashTable.set(this.data[i].carnet, this.data[i]);
+                    }
+                }
+                this.data = newHashTable.data;
+            }
+
+            set(key, value) {
+
+                while(this.loadFactor / this.data.length > 0.75) {
+                    this.rehashing();
+                }
+
+                console.log(this.loadFactor / this.data.length);
+
+                let address = this.hashFunction(key, false);
+
+                while (address > this.data.length) {
+                    this.rehashing();
+                    address = this.hashFunction(key, false);
+                }
+
+                this.data[address] = value;
+                this.loadFactor++;
+            }
+
+            get(key) {
+                let address = this.hashFunction(key, true);
+                console.log(address);
+                return this.data[address];
+            }
+
+            getNextPrimeNumber(number) {
+                let isPrime = false;
+                let nextPrime = number;
+                while (!isPrime) {
+                    nextPrime++;
+                    isPrime = true;
+                    for (let i = 2; i < nextPrime; i++) {
+                        if (nextPrime % i == 0) {
+                            isPrime = false;
+                            break;
+                        }
+                    }
+                }
+                return nextPrime;
+            }
+
+        }
+
+        let users = new HashTable(7);
+
+        //detect changes of input file
+        document.querySelector('input[type="file"]').addEventListener('change', loadFile);
+
+        function loadFile() {
+            let file = this.files[0];
+            let reader = new FileReader();
+            reader.onload = function (progressEvent) {
+                console.log(this.result);
+                let obj = JSON.parse(this.result);
+                for (let i = 0; i < obj.alumnos.length; i++) {
+                    let alumno = new Alumno(obj.alumnos[i].carnet.toString(), obj.alumnos[i].nombre, encodeText(obj.alumnos[i].password));
+                    users.set(alumno.carnet, alumno);
+                }
+                console.log(users);
+                console.log(users.get('201403877'));
+                console.log(users.get('201403895'));
+                addDataToTable();
+            };
+            reader.readAsText(file);
+        }
+
+        //encode text
+        function encodeText(text) {
+            return btoa(text);
+        }
+
+        //decode text
+        function decodeText(text) {
+            return atob(text);
+        }
+
+
+        function addDataToTable() {
+            let table = document.querySelector('table');
+            let tbody = table.querySelector('tbody');
+            for (let i = 0; i < users.data.length; i++) {
+                if (users.data[i]) {
+                    let tr = document.createElement('tr');
+                    let tdCarnet = document.createElement('td');
+                    let tdNombre = document.createElement('td');
+                    let tdPassword = document.createElement('td');
+
+                    tdCarnet.innerHTML = users.data[i].carnet;
+                    tdNombre.innerHTML = users.data[i].nombre;
+                    tdPassword.innerHTML = users.data[i].password;
+
+                    tr.appendChild(tdCarnet);
+                    tr.appendChild(tdNombre);
+                    tr.appendChild(tdPassword);
+
+                    tbody.appendChild(tr);
+                }
+            }
+        }
+
+    </script>
+</body>
+
+
+</html>
